@@ -30,13 +30,13 @@ function draw()
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	
-	vbo_factory.bindBuffer(buffer);
+	vbo_factory.loadBuffer(buffer);
 	shader_factory.useProgram(program);
 	
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
 	
 	shader_factory.unuseProgram();
-	vbo_factory.unbindBuffer();
+	vbo_factory.unloadBuffer();
 }
 
 function teardown()
