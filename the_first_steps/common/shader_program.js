@@ -5,7 +5,6 @@ var shader_factory = ( function (me)
 		var program = gl.createProgram();
 		gl.attachShader(program, vertex_shader);
 		gl.attachShader(program, fragment_shader);
-		gl.bindAttribLocation(program, vertexPos, "aPosition");
 		gl.linkProgram(program);
 		
 		return program;
@@ -24,6 +23,11 @@ var shader_factory = ( function (me)
 	me.destroyProgram = function (program)
 	{
 		gl.deleteProgram(program);
+	};
+	
+	me.getAttributeLocation = function (program, attrib)
+	{
+		return gl.getAttribLocation(program, attrib);
 	};
 
 	return me;

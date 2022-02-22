@@ -1,5 +1,5 @@
 var gl = {};
-var vertexPos = 0;
+var vertexAttrib = {};
 
 function setupWebGLContext()
 {
@@ -9,17 +9,23 @@ function setupWebGLContext()
 
 function setupBuffersAndShaders()
 {
-	var positions = [
-	0.0, 0.0, // 1st vertex
-	1.0, 0.0, // 2nd vertex
-	0.0, 1.0  // 3rd vertex
-	];
-	var type_positions = new Float32Array(positions);
-	buffer = vbo_factory.makeBuffer(type_positions);
+	var values = new Float32Array(
+	[
+		-1.0, -0.25,
+		 1.0, -0.25,
+		-1.0,  0.25,
+		 1.0, -0.25,
+		 1.0,  0.25,
+		-1.0,  0.25
+	]);
+	mesh = vbo_factory.makeBuffer(values);
 	
 	var vertex_shader = shader_factory.makeShader(shaders.vertexShader, gl.VERTEX_SHADER);
 	var fragment_shader = shader_factory.makeShader(shaders.fragmentShader, gl.FRAGMENT_SHADER);
 	program = shader_factory.makeProgram(vertex_shader, fragment_shader);
+	
+	var vertexPos = shader_factory.getAttributeLocation(program, "aPosition");
+	vertexAttrib = vbo_factory.makeVertexAttribute(vertexPos, 2, gl.FLOAT, false, 0, 0);
 	
 	shader_factory.destroyShader(vertex_shader);
 	shader_factory.destroyShader(fragment_shader);
@@ -30,19 +36,19 @@ function draw()
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	
-	vbo_factory.loadBuffer(buffer);
+	vbo_factory.loadVertexAttribute(mesh, vertexAttrib);
 	shader_factory.useProgram(program);
 	
-	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	gl.drawArrays(gl.TRIANGLES, 0, 6);
 	
 	shader_factory.unuseProgram();
-	vbo_factory.unloadBuffer();
+	vbo_factory.unloadVertexAttribute(vertexAttrib);
 }
 
 function teardown()
 {
 	shader_factory.destroyProgram(program);
-	vbo_factory.destroyBuffer(buffer);
+	vbo_factory.destroyBuffer(mesh);
 }
 
 function main()

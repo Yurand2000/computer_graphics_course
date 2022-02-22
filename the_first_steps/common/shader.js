@@ -6,6 +6,9 @@ var shader_factory = ( function (me)
 		gl.shaderSource(shader, shader_code);
 		gl.compileShader(shader);
 		
+		var message = gl.getShaderInfoLog(shader);
+		if (message.length > 0) { throw message; }
+
 		return shader;
 	};
 	
